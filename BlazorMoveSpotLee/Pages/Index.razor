@@ -1,0 +1,28 @@
+﻿@page "/"
+
+<PageTitle>MoveSpot</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<button @onclick="clickLogIn">login </button>
+<button @onclick="clickRegister">register </button>
+<button @onclick="clickActivity">ActivityList </button>
+<button @onclick="clickLesson">lessonList </button>
+@inject NavigationManager nav
+
+<style>
+    body{
+        background-color:hotpink;
+    }
+</style>
+
+@code{
+    private void clickLogIn(MouseEventArgs e) { nav.NavigateTo("/LogIn"); }
+    private void clickRegister(MouseEventArgs e) { nav.NavigateTo("/Register"); }
+    private void clickActivity(MouseEventArgs e) { nav.NavigateTo("/ActivityPage",true); }
+    private void clickLesson(MouseEventArgs e) { nav.NavigateTo("/LessonPage", true); }
+    //private void Naviga
+
+}

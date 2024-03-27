@@ -1,0 +1,70 @@
+﻿@page "/LogIn"
+<h3>LogIn</h3>
+<form>
+    <div>
+        <label>firstName</label>
+        <input type="text" @bind="inputFirstName" />
+    </div>
+    <div>
+        <label>lastName</label>
+        <input type="text" @bind="inputLastName" />
+        @*<br />*@
+    </div>
+    <div>
+        <label>phone</label>
+        <input type="text" @bind="inputPhone" />
+    </div>
+    <button type="button" @onclick="logIn">logIn </button>
+</form>
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <small>
+        Message: @errorMessage
+    </small>
+}
+@*<button @onclick="clickLessonForCustomers">lessonForCustomers </button>*@
+@inject NavigationManager nav
+
+@*@if ()
+<dialog>
+    
+</dialog>*@
+
+@code {
+    private string inputFirstName;
+    private string inputLastName;
+    private string inputPhone;
+    private string errorMessage;
+    //private string Message;
+    private static Person pManager;
+    private Person p;
+    ApiService cli = new ApiService();
+
+    private async void logIn(MouseEventArgs e)
+    {
+        //Message = "Message:" ;
+        p = await cli.LogIn(inputFirstName, inputLastName, inputPhone);
+
+        if (p != null)
+        {
+            if (p.FirstName == "לי" && p.LastName == "שוורץ" && p.Phone == "0533343603")
+            {
+                pManager = p;
+                errorMessage = "manager"; 
+                return;
+            }
+            CustomersList listCu = await cli.GetCustomersList();
+            errorMessage = "good";
+            if (listCu.Find(x=>x.Id==p.Id)!=null)
+            {
+                nav.NavigateTo($"/LessonForCustomersPage/{p.Id}");
+            }
+            else
+                nav.NavigateTo("/");
+        }
+        else
+            errorMessage = ":(";
+    }
+    
+    //private void clickLessonForCustomers(MouseEventArgs e) { nav.NavigateTo($"/LessonForCustomers/{p.Id}", true); }
+}

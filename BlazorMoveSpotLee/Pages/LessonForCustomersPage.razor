@@ -1,0 +1,47 @@
+﻿@page "/LessonForCustomersPage/{idC:int}"
+@inject ApiService api
+@inject NavigationManager nav
+<h1>LessonForCustomers</h1>
+
+<div class="container">
+    <h2 class=" text-center"> רשימת שיעורים לפי לקוח</h2>
+    @if (lessons != null)
+    {
+        <div class="row">
+            
+            @foreach (LessonForCustomers lessonForCustomers in lessons)
+            {
+                <h3 class="card-title text-center">@lessonForCustomers.Customers.Id</h3>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-text text-center">שם פרטי ומשפחה לקוח:@lessonForCustomers.Customers.FirstName  @lessonForCustomers.Customers.LastName</p>
+                            <p class="card-text text-center">שם פעילות:@lessonForCustomers.Lesson.Activity.NameActivity</p>
+                            <p class="card-text text-center">תאריך שיעור:@lessonForCustomers.Lesson.DateOfLesson.ToShortDateString()</p>
+                            <p class="card-text text-center">שעת התחלת שיעור:@lessonForCustomers.Lesson.TimeStart.ToShortTimeString()</p>
+                            <p class="card-text text-center">שעת סיום שיעור:@lessonForCustomers.Lesson.TimeEnd.ToShortTimeString()</p>
+                            <p class="card-text text-center">האם שילם?:@lessonForCustomers.Paid</p>
+                            <p class="card-text text-center">כמות אנשים בשיעור:@lessonForCustomers.Lesson.NumOfPeople</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+<style>
+    body {
+        background-color: aquamarine;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public int idC { get; set; }
+
+    private IEnumerable<LessonForCustomers> lessons;
+    protected override async Task OnInitializedAsync()
+    {
+        lessons = (await api.GetLessonForCustomersList()).Where(x=> x.Customers.Id==idC);
+    }
+}

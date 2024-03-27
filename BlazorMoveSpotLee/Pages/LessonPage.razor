@@ -1,0 +1,46 @@
+﻿@page "/LessonPage"
+@inject ApiService api
+<h1>LessonPage</h1>
+
+<div class="container">
+    <h2 class=" text-center">רשימת שיעורים</h2>
+    @if (lessons != null)
+    {
+        <div class="row">
+            @foreach (Lesson lesson in lessons)
+            {
+                //md4 -   קיצור של מארגין כפתור -יוצר שלוש עמודות
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title text-center">@lesson.Id</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <p class="card-text text-center">שם פעילות:@lesson.Activity.NameActivity</p>
+                            <p class="card-text text-center">שם פרטי ומשפחה מאמן:@lesson.Coach.FirstName @lesson.Coach.LastName</p>
+                            <p class="card-text text-center">תאריך שיעור:@lesson.DateOfLesson.ToShortDateString()</p>
+                             <p class="card-text text-center">שעת תחילת שיעור:@lesson.TimeStart.ToShortTimeString()</p>
+                            <p class="card-text text-center">שעת סיום שיעור:@lesson.TimeEnd.ToShortTimeString()</p>
+                            <p class="card-text text-center">כמות אנשים בשיעור:@lesson.NumOfPeople</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+<style>
+    body {
+        background-color: aquamarine;
+    }
+</style>
+
+@code {
+    private LessonList lessons;
+    protected override async Task OnInitializedAsync()
+    {
+        lessons = await api.GetLessonList();
+    }
+
+}

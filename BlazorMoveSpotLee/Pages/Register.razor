@@ -1,0 +1,83 @@
+﻿@page "/Register"
+<h3>Register</h3>
+
+<form>
+    <div>
+        <label>firstName</label>
+        <input type="text" @bind="inputFirstName" pattern="^[a-zA-Z\p{IsHebrew}]+$" />
+    </div>
+
+    <div>
+        <label>lastName</label>
+        <input type="text" @bind="inputLastName" pattern="^[a-zA-Z\p{IsHebrew}]+$" />
+        @*<br />*@
+    </div>
+
+    <div>
+        <label>phone</label>
+        <input type="text" @bind="inputPhone" pattern="^05\d{8}$" />
+        @*//Input - משתנה שהמשתמש מכניס *@
+       @* //bind-משתנה שאם יש לו ערך התחלתי זה הערך שהבנאדם רואה ואם מכניסים זה מתעדכן בזמן אמת במשתנה*@
+    </div>
+
+    <div>
+        <label>gender</label>
+        <select @onchange="SelectGender">
+            @* //אלמנט של select -עצם -אוביקט*@
+            <option value="1">
+
+            </option>
+            <option value="2">
+                נקבה
+            </option>
+            <option value="3">
+                זכר
+            </option>
+        </select>
+        @*//select- קומבובוקס*@
+    </div>
+
+    <button type="button" @onclick="register">register </button>
+    @inject NavigationManager nav
+
+</form>
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <small>
+        Message: @errorMessage
+    </small>
+}
+
+
+@code {
+    private string inputFirstName;
+    private string inputLastName;
+    private string inputPhone;
+    private int inputGender;
+    private string errorMessage;
+
+    ApiService cli = new ApiService();
+
+    private void SelectGender(ChangeEventArgs e)
+    {
+        inputGender = int.Parse(e.Value.ToString()); 
+    }
+    private async void register(MouseEventArgs e)
+    {
+        //Message = "Message:" ;
+        Person p = await cli.Register(inputFirstName, inputLastName, inputPhone, inputGender);
+        if (p != null)
+        {
+            errorMessage = "good";
+           //כמה שניות של המתנה לפני העברה ללוגאין
+            { nav.NavigateTo("/LogIn"); }
+        }
+        else
+            errorMessage = ":(";
+           //אם קיים שיכתוב הודעת "כברק
+
+        
+    }
+
+    //private void register(MouseEventArgs e) { nav.NavigateTo("/LogIn"); }
+}
